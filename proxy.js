@@ -18,7 +18,7 @@ if(!this.Proxy){
 				if(!handler.set){
 					handler.set=dfSetter;
 				}
-				for(var key in target){
+				Sky.forIn(target,function(value,key){
 					Object.defineProperty(me,key,{
 						enumerable:true,
 						get:function(){
@@ -30,7 +30,7 @@ if(!this.Proxy){
 							}
 						}
 					});
-				}
+				});
 			};
 		}else if(Sky.support.VBScript){
 			//从avalon学到的方式，通过VB
