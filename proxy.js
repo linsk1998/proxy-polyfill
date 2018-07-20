@@ -54,11 +54,11 @@ if(!this.Proxy){
 					for(var key in target){
 						if(key.match(/[a-zA-Z0-9_$]/)){
 							buffer.push(
-								'Public Property Let ['+key+'](value)',
-								'	Call VBProxySetter([__target__],"'+key+'",value,Me,[__handler__])',
+								'Public Property Let ['+key+'](var)',
+								'	Call VBProxySetter([__target__],"'+key+'",var,Me,[__handler__])',
 								'End Property',
-								'Public Property Set ['+key+'](value)',
-								'	Call VBProxySetter([__target__],"'+key+'",value,Me,[__handler__])',
+								'Public Property Set ['+key+'](var)',
+								'	Call VBProxySetter([__target__],"'+key+'",var,Me,[__handler__])',
 								'End Property',
 								'Public Property Get ['+key+']',
 								'	On Error Resume Next', //必须优先使用set语句,否则它会误将数组当字符串返回
@@ -80,7 +80,11 @@ if(!this.Proxy){
 						'	Set '+className+'_Factory=o',
 						'End Function'
 					);
-					window.execScript(buffer.join('\n'), 'VBScript');
+					try{
+						window.execScript(buffer.join('\n'), 'VBScript');
+					}catch(e){
+						alert(buffer.join('\n'));
+					}
 				}
 				return window[className+'_Factory'](target,handler); //得到其产品
 			};
