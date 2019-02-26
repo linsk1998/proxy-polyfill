@@ -1,5 +1,6 @@
 if(!this.Proxy){
 	(function(window){
+		var seq=0;
 		var dfGetter=function(target, property, receiver){
 			return target[property];
 		};
@@ -9,7 +10,7 @@ if(!this.Proxy){
 		var afterRevoke=function(){
 			throw "illegal operation attempted on a revoked proxy";
 		};
-		if(Sky.support.defineProperty){
+		if(Object.defineProperties){
 			window.Proxy=function(target, handler){
 				var me=this;
 				if(!handler.get){
@@ -18,7 +19,7 @@ if(!this.Proxy){
 				if(!handler.set){
 					handler.set=dfSetter;
 				}
-				Sky.forIn(target,function(value,key){
+				Object.keys(target).forEach(function(key){
 					Object.defineProperty(me,key,{
 						enumerable:true,
 						get:function(){
@@ -32,7 +33,7 @@ if(!this.Proxy){
 					});
 				});
 			};
-		}else if(Sky.support.VBScript){
+		}else if(window.execScript){
 			//从avalon学到的方式，通过VB
 			window.VBProxySetter=function(target, property, value, receiver, handler){
 				if(handler.set(target, property, value, receiver)===false){
@@ -46,7 +47,7 @@ if(!this.Proxy){
 			window.VBProxyFactory=function(target,handler){
 				var className=VBProxyPool.get(target);
 				if(!className){
-					className="VBClass_"+Sky.uniqueId();
+					className="VBClass_"+(seq++);
 					VBProxyPool.set(target,className);
 					var buffer=["Class "+className];
 					buffer.push('Public [__target__]');
