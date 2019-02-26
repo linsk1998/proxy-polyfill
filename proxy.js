@@ -52,7 +52,7 @@ if(!this.Proxy){
 					var buffer=["Class "+className];
 					buffer.push('Public [__target__]');
 					buffer.push('Public [__handler__]');
-					for(var key in target){
+					Object.keys(target).forEach(function(key){
 						if(key.match(/[a-zA-Z0-9_$]/)){
 							buffer.push(
 								'Public Property Let ['+key+'](var)',
@@ -70,7 +70,7 @@ if(!this.Proxy){
 								'	On Error Goto 0',
 								'End Property');
 						}
-					}
+					});
 					buffer.push('End Class');
 					buffer.push(
 						'Function '+className+'_Factory(target,handler)',
